@@ -208,11 +208,7 @@ async function loadShows() {
       return;
     }
 
-    // ✏️ TASK 1c · 🎨 SHOW: instead of drawing ALL shows, draw the ones that
-    //    match the search box:  const matches = filterShows(allShows, searchInput.value);
-    //    then renderList(matches) and put matches.length in the message.
-    renderList(allShows);
-    setState("success", "🎉 " + allShows.length + " shows ready to binge.");
+    showPriorInput();
   } catch (err) {
     console.error(err);
     renderList([]);
@@ -269,14 +265,6 @@ searchInput.addEventListener("input", function () {
   }
 });
 
-function showPriorInput(){
-
-   const priorInput = localStorage.getItem("binge-search") || "";
-
-   searchInput.value = priorInput
-}
-
-showPriorInput()
 // =====================================================================
 // 🌓 PART 1 · Remember the theme (a STRING)
 // =====================================================================
@@ -296,14 +284,6 @@ themeBtn.addEventListener("click", function () {
     localStorage.setItem("binge-theme", "dark");
   }
 });
-///forget me button function
-forgetBtn.addEventListener("click", function () {
-  favorites = [];
-  localStorage.removeItem("binge-favorites");
-  localStorage.removeItem("binge-theme");
-  localStorage.removeItem("binge-search");
-  location.reload();
-});
 
 // =====================================================================
 // ⭐ PART 2 · Remember favorite shows (a LIST)
@@ -319,9 +299,6 @@ function starText(id) {
   return "☆ Add to favorites";
 }
 
-function updateFavCount() {
-  favCountEl.textContent = "⭐ " + favorites.length + " favorites";
-}
 
 updateFavCount();
 
@@ -365,6 +342,20 @@ listEl.addEventListener("click", function (event) {
 // 1c · 🎨 SHOW: go to loadShows in STEP 8
 // ✅ CHECK: search "drama", reload → the box says drama AND only dramas show
 
+function showPriorInput() {
+  const priorInput = localStorage.getItem("binge-search") || "";
+  searchInput.value = priorInput;
+  const matches = filterShows(allShows, priorInput);
+  renderList(matches);
+
+  if (matches.length === 0) {
+    setState("empty", '🫥 No shows match "' + priorInput.trim() + '".');
+  } else if (priorInput.trim()) {
+    setState("success", "🎉 " + matches.length + " of " + allShows.length + " shows.");
+  } else {
+    setState("success", "🎉 " + allShows.length + " shows ready to binge.");
+  }
+}
 
 
 // =====================================================================
@@ -376,7 +367,9 @@ listEl.addEventListener("click", function (event) {
 // 2b · go to the ☆ click listener in PART 2
 // ✅ CHECK: star 2 shows → "⭐ 2 favorites". Reload → still 2.
 
-
+function updateFavCount() {
+  favCountEl.textContent = "⭐ " + favorites.length + " favorites";
+}
 
 // =====================================================================
 // ✏️ TASK 3 · 🧹 Forget me
@@ -387,7 +380,13 @@ listEl.addEventListener("click", function (event) {
 //   2. location.reload();   ← reloads the page like a brand-new visit
 // ✅ CHECK: star shows, search, go light → 🧹 → everything is back to new
 
-
+forgetBtn.addEventListener("click", function () {
+  favorites = [];
+  localStorage.removeItem("binge-favorites");
+  localStorage.removeItem("binge-theme");
+  localStorage.removeItem("binge-search");
+  location.reload();
+});
 
 // =====================================================================
 // 🏆 TASK 4 · BONUS: ⭐ Only favorites
