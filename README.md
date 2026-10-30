@@ -7,5 +7,5 @@
   -  ✏️ TASK 1 · Remember the last search          → a STRING
   -  ✏️ TASK 2 · Show "⭐ 3 favorites" in the header → read the LIST
   -  ✏️ TASK 3 · A 🧹 Forget me button              → removeItem
-- Peer Review:
-- Review:
+- Peer Review: Zackary Santos
+- Review: Code works and runs good
